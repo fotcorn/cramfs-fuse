@@ -49,7 +49,6 @@ def uncompress_block(offset, filesystem):
 
 fs = file("fs.cramfs", "r")
 
-
 superblock = fs.read(64)
 superblock = unpack(CRAMFS_SUPERBLOCK, superblock)
 
