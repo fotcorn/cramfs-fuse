@@ -16,7 +16,7 @@ class Inode:
     def __str__(self):
         return self.__dict__.__str__()
 
-def inode_parse(offset, filesystem):
+def __inode_parse(offset, filesystem):
     filesystem.seek(offset)
     inode = filesystem.read(12)
     inode = unpack(CRAMFS_INODE, inode)
@@ -38,17 +38,36 @@ def inode_parse(offset, filesystem):
     # name
     if inodedata.name != 0:
         inodedata.name = filesystem.read(inodedata.namelen * 4).replace("\x00", "")
-    
     return inodedata
 
-def uncompress_block(offset, filesystem):
+def __uncompress_block(offset, filesystem):
     fs.seek(offset)
     endofblock = unpack("I", fs.read(4))[0] # read block pointer
     data = fs.read(endofblock - offset - 4)
     return zlib.decompress(data)
 
+def __readdir(offset, size, filesystem):
+    # returns {'file1.txt' : <obj class Inode>, 'file2.txt' : <obj class Inode>}
+    pass
+
+def get_inode(path, filesystem):
+    inode = inode_parse(64, filesystem)
+
+    subdirs = path[1:].split("/")[:-1]
+    for i in range(len(subdirs)):
+        inode = readdir(inode.offset, inode.size, filesystem)[subdirs[i]]
+    return inode
+
+def readdir(path, filesystem):
+    inode = get_inode(path, filesystem)
+    return __readdir(inode.offset, inode.size)
+
 fs = file("fs.cramfs", "r")
 
+get_inode("/file1/folder/test/file.txt",fs)#.__dict__
+#print get_inode("/file2.txt",fs)#.__dict__
+
+"""
 superblock = fs.read(64)
 superblock = unpack(CRAMFS_SUPERBLOCK, superblock)
 
@@ -57,7 +76,7 @@ print inode_parse(76, fs)
 print inode_parse(100, fs)
 
 print uncompress_block(124, fs)
-print uncompress_block(148, fs)
+print uncompress_block(148, fs)"""
 
 
 
