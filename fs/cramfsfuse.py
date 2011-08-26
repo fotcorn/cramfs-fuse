@@ -1,5 +1,6 @@
 #!/usr/bin/python
-from fuse import FUSE, Operations
+from fuse import FUSE, Operations, FuseOSError
+from errno import ENOENT
 
 import cramfs
 
@@ -7,10 +8,18 @@ class CramFSFuse(Operations):
     def __init__(self, filename):
         self.fs = file(filename, "r")
 
-
     def getattr(self, path, fh=None):
         inode = cramfs.get_inode(path, self.fs)
-        return dict(st_mode = inode.mode, st_uid = inode.uid, st_gid = inode.gid)
+        if inode == None:
+            raise FuseOSError(ENOENT)
+        return dict(st_mode = inode.mode, st_uid = inode.uid, st_gid = inode.gid, st_size = inode.size)
+
+    def readdir(self, path, fh):
+        return cramfs.readdir(path, self.fs)
+
+    #def read(self, path, size, offset, fh):
+    #    """Returns a string containing the data requested."""
+    #    raise FuseOSError(EIO)
 
 
 if __name__ == '__main__':
