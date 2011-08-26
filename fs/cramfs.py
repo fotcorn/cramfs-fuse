@@ -4,6 +4,7 @@ import zlib
 
 CRAMFS_SUPERBLOCK = "IIII16s16s16s"
 CRAMFS_INODE =      "HH3sBI"
+BLOCKSIZE = 4096
 
 class Inode:
     name = ""
@@ -32,21 +33,52 @@ def __parse_inode(offset, filesystem):
     
     # namelen & offset
     namelenoffset = inode[4]
-    inodedata.namelen = (namelenoffset & 0x3F) * 4       # first 6 bits
-    inodedata.offset =  (namelenoffset >> 6) * 4 # last 26 bits
+    inodedata.namelen = (namelenoffset & 0x3F) * 4 # first 6 bits
+    inodedata.offset =  (namelenoffset >> 6) * 4   # last 26 bits
 
     # name
     if inodedata.name != 0:
         inodedata.name = filesystem.read(inodedata.namelen).replace("\x00", "")
     return inodedata
 
-def __uncompress_block(offset, filesystem):
-    filesystem.seek(offset)
-    endofblock = unpack("I", filesystem.read(4))[0] # read block pointer
+def __uncompress_file(offset, orginalsize, filesystem):
+    # read block headers
+    nblocks = (orginalsize - 1) / BLOCKSIZE + 1
+    filesystem.seek(offset) # seek to block headers
+    
+    startofblock = offset + nblocks * 4 # start of first block after block headers
+    blocks = list() # [ blocksize1, blocksize2, ...]
+    for i in range(nblocks):
+        endofblock = unpack("I", filesystem.read(4))[0]
+        blocks.append(endofblock - startofblock)
+        startofblock = endofblock
 
-    # blocksize = endofblock - offset - blockheader(4 bytes)
-    data = filesystem.read(endofblock - offset - 4)
-    return zlib.decompress(data)
+    ret = ""
+    for blocksize in blocks:
+        data = filesystem.read(blocksize)
+        ret = ret + zlib.decompress(data)
+    return ret
+    
+    """
+        filesystem.seek(offset)
+        
+        ret = ""
+        startofblock = offset
+        for i in range(nblock):
+        endofblock = unpack("I", filesystem.read(4))[0] # read block pointer
+        data = filesystem.read(endofblock - startofblock - 4)
+        print hexlify(data)
+        startofblock = endofblock
+        ret = ret + zlib.decompress(data[4:])
+        return ret"""
+        #startofblock = endofblock
+        #endofblock = unpack("I", filesystem.read(4))[0] # read block pointer
+        #blocksize = endofblock - offset - blockheader(4 bytes)
+        #data = filesystem.read(endofblock - offset - 4)
+        #ret = ret + zlib.decompress(data)
+
+
+
 
 def __readdir(offset, size, filesystem):
     # returns {'file1.txt' : <obj class Inode>, 'file2.txt' : <obj class Inode>}
@@ -81,13 +113,13 @@ def readdir(path, filesystem):
 
 def read(path, fileoffset, size, filesystem):
     inode = get_inode(path, filesystem)
-    block = __uncompress_block(inode.offset, filesystem)
-    return block[fileoffset:fileoffset + size]
+    filedata = __uncompress_file(inode.offset, inode.size, filesystem)
+    return filedata[fileoffset:fileoffset + size]
 
-#fs = file("fs.cramfs", "r")
-#print read("/test/file1.txt", 0, 10, fs)
+fs = file("bigfile.fs", "r")
+
+print read("/fuse.py", 0, 22800, fs)
 #print readdir("/test", fs)
-
 #rootinode = __parse_inode(64, fs)
 #print __readdir(rootinode.offset, rootinode.size, fs)
 #get_inode("/file1/folder/test/file.txt",fs)#.__dict__
