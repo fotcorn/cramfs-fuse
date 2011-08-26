@@ -41,9 +41,11 @@ def __parse_inode(offset, filesystem):
     return inodedata
 
 def __uncompress_block(offset, filesystem):
-    fs.seek(offset)
-    endofblock = unpack("I", fs.read(4))[0] # read block pointer
-    data = fs.read(endofblock - offset - 4)
+    filesystem.seek(offset)
+    endofblock = unpack("I", filesystem.read(4))[0] # read block pointer
+
+    # blocksize = endofblock - offset - blockheader(4 bytes)
+    data = filesystem.read(endofblock - offset - 4)
     return zlib.decompress(data)
 
 def __readdir(offset, size, filesystem):
@@ -77,10 +79,14 @@ def readdir(path, filesystem):
     inode = get_inode(path, filesystem)
     return __readdir(inode.offset, inode.size, filesystem)
 
-fs = file("fs.cramfs", "r")
-print readdir("/test", fs)
+def read(path, fileoffset, size, filesystem):
+    inode = get_inode(path, filesystem)
+    block = __uncompress_block(inode.offset, filesystem)
+    return block[fileoffset:fileoffset + size]
 
-
+#fs = file("fs.cramfs", "r")
+#print read("/test/file1.txt", 0, 10, fs)
+#print readdir("/test", fs)
 
 #rootinode = __parse_inode(64, fs)
 #print __readdir(rootinode.offset, rootinode.size, fs)
