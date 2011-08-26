@@ -1,3 +1,13 @@
+"""
+
+blocksize: 4096 bytes
+
+
+
+
+"""
+
+
 from struct import unpack
 from binascii import hexlify,unhexlify
 import zlib
@@ -29,7 +39,7 @@ def inode_parse(offset, filesystem):
     inodedata.uid = inode[1]
     
     # size & gid
-    print int(hexlify(inode[2][::-1]), 16)
+    inodedata.size = int(hexlify(inode[2][::-1]), 16)
     #print inode[2]
     
     # namelen & offset
@@ -57,9 +67,11 @@ print inode_parse(148, fs)
 
 
 fs.seek(184)
-print hexlify(fs.read(14))
+fs.read(4) # read block pointer
+print zlib.decompress(fs.read(20))
+
 fs.seek(208)
-print hexlify(fs.read(14))
-#print zlib.decompress(fs.read(24)[::-1], -1)
+fs.read(4) # read block pointer
+print zlib.decompress(fs.read(20))
 
 

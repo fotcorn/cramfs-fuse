@@ -4,15 +4,11 @@ from binascii import hexlify,unhexlify
 text = "this is file1"
 
 print hexlify(zlib.compress(text))
+print "adler: " + hex(zlib.adler32(text))
 
-print zlib.adler32(text)
-print zlib.decompress(unhexlify("789c2bc9c82c5600a2b4cc9c544300220004a6"))
+#789c 2bc9c82c5600a2b4cc9c544300   220004a6
+#78da2bc9c82c5600a2b4cc9c54432e0026b004b0
+#78da2bc9c82c5600a2b4cc9c54232e0026b204b1
 
-print zlib.decompress(unhexlify("789c2bc9c82c5600a2b4cc9c544300220004a6"))
 
-
-print unhexlify("d000000078da2bc9c82c5600a2b4")
-# 2
-
-# d000000078da2bc9c82c5600a2b4
-# 789c        2bc9c82c5600a2b4cc9c5443 00220004a6
+print zlib.decompress(unhexlify("78da2bc9c82c5600a2b4cc9c54232e0026b204b1"))
