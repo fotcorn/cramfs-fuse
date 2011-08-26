@@ -1,1 +1,2 @@
 this is file2
+some more text
