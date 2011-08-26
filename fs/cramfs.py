@@ -58,27 +58,6 @@ def __uncompress_file(offset, orginalsize, filesystem):
         data = filesystem.read(blocksize)
         ret = ret + zlib.decompress(data)
     return ret
-    
-    """
-        filesystem.seek(offset)
-        
-        ret = ""
-        startofblock = offset
-        for i in range(nblock):
-        endofblock = unpack("I", filesystem.read(4))[0] # read block pointer
-        data = filesystem.read(endofblock - startofblock - 4)
-        print hexlify(data)
-        startofblock = endofblock
-        ret = ret + zlib.decompress(data[4:])
-        return ret"""
-        #startofblock = endofblock
-        #endofblock = unpack("I", filesystem.read(4))[0] # read block pointer
-        #blocksize = endofblock - offset - blockheader(4 bytes)
-        #data = filesystem.read(endofblock - offset - 4)
-        #ret = ret + zlib.decompress(data)
-
-
-
 
 def __readdir(offset, size, filesystem):
     # returns {'file1.txt' : <obj class Inode>, 'file2.txt' : <obj class Inode>}
@@ -116,24 +95,6 @@ def read(path, fileoffset, size, filesystem):
     filedata = __uncompress_file(inode.offset, inode.size, filesystem)
     return filedata[fileoffset:fileoffset + size]
 
-fs = file("bigfile.fs", "r")
-
-print read("/fuse.py", 0, 22800, fs)
-#print readdir("/test", fs)
-#rootinode = __parse_inode(64, fs)
-#print __readdir(rootinode.offset, rootinode.size, fs)
-#get_inode("/file1/folder/test/file.txt",fs)#.__dict__
-
-"""
-superblock = fs.read(64)
-superblock = unpack(CRAMFS_SUPERBLOCK, superblock)
-
-print inode_parse(64, fs)
-print inode_parse(76, fs)
-print inode_parse(100, fs)
-
-print uncompress_block(124, fs)
-print uncompress_block(148, fs)"""
 
 
 
