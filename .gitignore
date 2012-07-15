@@ -3,4 +3,7 @@
 *.bin
 .cproject
 .project
+obj
+*~
+.autotools
 

@@ -1,7 +1,9 @@
 global loader                           ; making entry point visible to linker
  
 extern kmain                            ; kmain is defined in kmain.cpp
- 
+
+extern init_kernel
+
 ; setting up the Multiboot header - see GRUB docs for details
 MODULEALIGN equ  1<<0                   ; align loaded modules on page boundaries
 MEMINFO     equ  1<<1                   ; provide memory map
@@ -21,11 +23,12 @@ STACKSIZE equ 0x4000                    ; that's 16k.
  
 loader:
     mov  esp, stack + STACKSIZE         ; set up the stack
+
+    call init_kernel
+
     push eax                            ; Multiboot magic number
     push ebx                            ; Multiboot info structure
- 
     call kmain                          ; call kernel proper
- 
     cli
 .hang:
     hlt                                 ; halt machine should kernel return

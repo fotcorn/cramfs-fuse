@@ -15,4 +15,11 @@ void kmain( void* mbd, unsigned int magic )
 
     print("test");
     print("pyos 0.001");
+
+
+    int i = 5;
+    //putint(i/0);
+
+    print("Calling interrupt 49");
+    asm("int $50");
 }
