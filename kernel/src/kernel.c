@@ -21,5 +21,5 @@ void kmain( void* mbd, unsigned int magic )
     //putint(i/0);
 
     print("Calling interrupt 49");
-    asm("int $50");
+    asm("int $49");
 }

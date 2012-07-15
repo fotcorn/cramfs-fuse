@@ -12,6 +12,7 @@ init_kernel:
     ; reload selectors
     jmp   0x08:reload_selectors ; 0x08 points at the new code selector
 
+init_idtr:
     lidt [ idtr ]
     ret
 
@@ -34,7 +35,7 @@ reload_selectors:
    mov fs, ax
    mov gs, ax
    mov ss, ax
-   ret
+   jmp init_idtr
 
 ; IDT
 idtr:
