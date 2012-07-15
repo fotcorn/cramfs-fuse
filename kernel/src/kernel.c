@@ -22,4 +22,7 @@ void kmain( void* mbd, unsigned int magic )
 
     print("Calling interrupt 49");
     asm("int $49");
+
+    //int a = 5 / 0;
+
 }
