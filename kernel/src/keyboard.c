@@ -6,5 +6,8 @@
 void keyboard_interrupt() {
 	pic_eoi(0x1);
 	unsigned char scancode = inb(KEYBOARD_IO_PORT);
-	putint(scancode);
+	char character = en_us[scancode];
+	if (character != 0) {
+		putch(character);
+	}
 }
