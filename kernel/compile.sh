@@ -1,3 +1,4 @@
+rm obj/*
 nasm -f elf src/loader.asm -o obj/loader.o
 nasm -f elf src/kernel.asm -o obj/kernel_asm.o
 gcc -c -m32 -o obj/kernel.o src/kernel.c -nostdlib -fno-builtin -nostartfiles -nodefaultlibs -I src/libc
