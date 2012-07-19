@@ -1,7 +1,5 @@
 [BITS 32]
 global init_kernel
-extern interrupt_handler0
-extern interrupt_handler49
 
 %define BASE_OF_SECTION 0x00100000
 
@@ -15,6 +13,7 @@ init_kernel:
 
 init_idtr:
     lidt [ idtr ]
+    sti
     ret
 
 ; init idt
@@ -46,24 +45,23 @@ idt:
     dw (BASE_OF_SECTION + interrupt0 - $$) & 0ffffh ; offset 1
     dw 08h ; second selector (code)
     db 0 ; zero (unused)
-    db 08Eh ; type and attributes:
-    ; present: 1
-    ; DPL: 00
-    ; Storage segment: 0
-    ; type: 0xE (32bit interrupt gate)
-    ; 0
+    db 08Eh ; type and attributes: ; present: 1 ; DPL: 00 ; Storage segment: 0 ; type: 0xE (32bit interrupt gate); 0
     dw (BASE_OF_SECTION + interrupt0 - $$) >> 16 ; offset 2
 
-    resd 48*2 ; zero out first 48 interrupts
+    resd 32*2 ; zero out interrupts 1- 32
+
+    dw (BASE_OF_SECTION + interrupt33 - $$) & 0ffffh ; offset 1
+    dw 08h ; second selector (code)
+    db 0 ; zero (unused)
+    db 08Eh  ; type and attributes: ; present: 1 ; DPL: 00 ; Storage segment: 0 ; type: 0xE (32bit interrupt gate); 0
+    dw (BASE_OF_SECTION + interrupt33 - $$) >> 16 ; offset 2
+
+    resd 15*2 ; zero out interrupts 1- 32
+
     dw (BASE_OF_SECTION + interrupt49 - $$) & 0ffffh ; offset 1
     dw 08h ; second selector (code)
     db 0 ; zero (unused)
-    db 08Eh ; type and attributes:
-    ; present: 1
-    ; DPL: 00
-    ; Storage segment: 0
-    ; type: 0xE (32bit interrupt gate)
-    ; 0
+    db 08Eh  ; type and attributes: ; present: 1 ; DPL: 00 ; Storage segment: 0 ; type: 0xE (32bit interrupt gate); 0
     dw (BASE_OF_SECTION + interrupt49 - $$) >> 16 ; offset 2
 idt_end:
 

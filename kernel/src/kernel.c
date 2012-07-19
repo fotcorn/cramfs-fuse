@@ -1,9 +1,12 @@
 #include "screen.h"
+#include "pic.h"
 
 #include <string.h>
 
 void kmain( void* mbd, unsigned int magic )
 {
+	//init_pic();
+
     putch('A');
     putch('B');
     putch('\n');
@@ -21,8 +24,9 @@ void kmain( void* mbd, unsigned int magic )
     //putint(i/0);
 
     print("Calling interrupt 49");
+
     asm("int $49");
 
-    //int a = 5 / 0;
-
+    int a = 5 / 0;
+    while (1) {}
 }
