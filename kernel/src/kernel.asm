@@ -13,7 +13,6 @@ init_kernel:
 
 init_idtr:
     lidt [ idtr ]
-    sti
     ret
 
 ; init idt

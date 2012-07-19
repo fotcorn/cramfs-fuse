@@ -47,6 +47,12 @@ void init_pic() {
 	outb(PIC1_DATA, a1);   // restore saved masks.
 	outb(PIC2_DATA, a2);
 // end copy & paste
+
+	// enable only IRQ1 = keyboard
+	outb(0x21,0xfd);
+	outb(0xa1,0xff);
+
+	asm volatile ("sti"); // enable interrupts
 }
 
 void pic_eoi(unsigned char irq) {
