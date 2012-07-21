@@ -1,11 +1,14 @@
 # compiler
-CC=gcc
+CC=i586-elf-gcc
+LD=i586-elf-ld
 CFLAGS=-c -m32 -nostdlib -fno-builtin -nostartfiles -nodefaultlibs -I src/libc
 NASMLFAGS=-f elf
 
+LDFLAGS=-melf_i386 -T src/linker.ld
+
 # files
-C_SOURCES=$(wildcard src/*.c) $(wildcard src/libc/*.c)
-C_HEADERS=$(wildcard src/*.h) $(wildcard src/libc/*.h)
+C_SOURCES=$(wildcard src/*.c)
+C_HEADERS=$(wildcard src/*.h)
 C_OBJECTS=$(patsubst src/%.c, obj/%.o, $(C_SOURCES))
 
 ASM_SOURCES=src/kernel_asm.asm src/loader.asm 
@@ -21,7 +24,7 @@ $(ISO): $(KERNEL_BIN)
 	grub-mkrescue -o $(ISO) iso
 
 $(KERNEL_BIN): $(ASM_OBJECTS) $(C_OBJECTS)
-	ld -melf_i386 -T src/linker.ld -o $(KERNEL_BIN) $(ASM_OBJECTS) $(C_OBJECTS)
+	$(LD) $(LDFLAGS) -o $(KERNEL_BIN) $(ASM_OBJECTS) $(C_OBJECTS) /home/corn/projekte/gcccross/install/i586-elf/lib/libc.a
 	
 obj/%.o: src/%.c $(C_HEADERS)
 	$(CC) $(CFLAGS) -o $@ $<
@@ -32,4 +35,3 @@ obj/%.o: src/%.asm
 clean:
 	rm -rf obj
 	mkdir obj
-	mkdir obj/libc

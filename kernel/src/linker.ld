@@ -21,9 +21,8 @@ SECTIONS
 
     .bss :
     {
-        sbss = .;
         *(COMMON)
         *(.bss)
-        ebss = .;
+        _end = ALIGN(0x1000);
     }
 }

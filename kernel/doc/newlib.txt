@@ -1,0 +1,11 @@
+gunzip newlib.tar.gz
+mkdir newlib-build
+mkdir newlib-install
+cd newlib-build
+
+
+../gcc-4.7.1/configure --target=i586-elf --prefix=/home/corn/projekte/gcccross/install \
+ --enable-languages=c --disable-libquadmath --disable-libssp
+
+
+../newlib/configure --prefix=/home/corn/projekte/gcccross/install --target=i586-elf

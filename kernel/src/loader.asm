@@ -1,6 +1,6 @@
 global loader                           ; making entry point visible to linker
  
-extern kmain                            ; kmain is defined in kmain.cpp
+extern kmain                            ; kmain is defined in kernel.c
 
 extern init_kernel
 

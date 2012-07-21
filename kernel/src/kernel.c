@@ -2,6 +2,7 @@
 #include "pic.h"
 
 #include <string.h>
+#include <stdio.h>
 
 void kmain( void* mbd, unsigned int magic )
 {
@@ -24,6 +25,9 @@ void kmain( void* mbd, unsigned int magic )
     asm("int $49");
     int a = 5 / 0;
     */
+
+    printf("hello printf!");
+    //printf("hello int: %d", 25);
 
     while (1) {}
 }
