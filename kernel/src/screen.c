@@ -20,7 +20,9 @@ void setpos(int x, int y)
 
 void putint(int i)
 {
-	putch(i + 48);
+	char buffer[100];
+	sprintf(buffer, "%d", i);
+	print(buffer);
 }
 
 void print(char* str)

@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void kmain( void* mbd, unsigned int magic )
 {
@@ -20,6 +21,7 @@ void kmain( void* mbd, unsigned int magic )
     print("test");
     print("pyos 0.001");
 
+    putint(54321);
     /*
     print("Calling interrupt 49");
     asm("int $49");

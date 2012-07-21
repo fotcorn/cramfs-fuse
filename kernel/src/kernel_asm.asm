@@ -16,10 +16,10 @@ init_idtr:
     lidt [ idtr ]
 
     ; init fpu
-    mov edx, cr0
-    or edx, 0b100010
-    and edx, (-1) - 0b011
-    mov cr0, edx
+    ;mov edx, cr0
+    ;or edx, 0b100010
+    ;and edx, !0b100
+    ;mov cr0, edx
      ; MP = 1 bit1
      ; EM = 0 bit 2
      ; NE = 1 bit 5

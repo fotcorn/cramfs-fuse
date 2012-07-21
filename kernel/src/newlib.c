@@ -19,14 +19,11 @@ int write(int file, char *ptr, int len) {
 
 caddr_t sbrk(int incr) {
 	print("sbrk");
-	extern char _end; /* Defined by the linker */
-	static char *heap_end;
+	putint(incr);
+
+	static char *heap_end = (char*)0x00200000;
+
 	char *prev_heap_end;
-
-	if (heap_end == 0) {
-	  heap_end = &_end;
-	}
-
 	prev_heap_end = heap_end;
 
 	heap_end += incr;
