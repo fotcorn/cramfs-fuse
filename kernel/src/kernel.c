@@ -4,6 +4,14 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+
+
+struct test{
+	int a;
+	short b;
+	char c;
+};
 
 void kmain( void* mbd, unsigned int magic )
 {
@@ -21,15 +29,8 @@ void kmain( void* mbd, unsigned int magic )
     print("test");
     print("pyos 0.001");
 
-    putint(54321);
-    /*
-    print("Calling interrupt 49");
-    asm("int $49");
-    int a = 5 / 0;
-    */
-
-    printf("hello printf!");
-    //printf("hello int: %d", 25);
+    printf("hello printf!\n");
+    printf("hello int: %d\n", 25);
 
     while (1) {}
 }
