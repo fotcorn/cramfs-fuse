@@ -1,5 +1,6 @@
 #include "screen.h"
 #include "pic.h"
+#include "python.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -31,6 +32,8 @@ void kmain( void* mbd, unsigned int magic )
 
     printf("hello printf!\n");
     printf("hello int: %d\n", 25);
+
+    call_python();
 
     while (1) {}
 }
