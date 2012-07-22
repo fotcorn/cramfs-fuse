@@ -14,7 +14,6 @@ PMGENPMFEATURES := ../../tools/pmGenPmFeatures.py
 IPM = true
 DEBUG = true
 
-TARGET = pymite
 SOURCES = plat.c
 OBJS = $(SOURCES:.c=.o)
 
@@ -28,20 +27,13 @@ export CFLAGS IPM PM_LIB_FN
 
 .PHONY: all clean
 
-all : pmfeatures.h $(TARGET).a
+all : pmfeatures.h $(OBJS) $(PM_LIB_PATH)
 
 $(PM_LIB_PATH) : ../../vm/*.c ../../vm/*.h
 	make -C ../../vm
 
-$(TARGET).a : $(OBJS) $(PM_LIB_PATH)
-	$(AR) rcs $@ $(OBJS) $(PM_LIB_PATH)
-
 pmfeatures.h : pmfeatures.py $(PMGENPMFEATURES)
 	$(PMGENPMFEATURES) pmfeatures.py > $@
-
-# Generate native code and module images from the python source
-#$(TARGET)_nat.c $(TARGET)_img.c: $(PM_USR_SOURCES) pmfeatures.py
-#	$(PMIMGCREATOR) -f pmfeatures.py -c -u -o $(TARGET)_img.c --native-file=$(TARGET)_nat.c $(PM_USR_SOURCES)
 
 clean :
 	$(MAKE) -C ../../vm clean

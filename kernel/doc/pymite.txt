@@ -1,0 +1,6 @@
+Copy OS/kernel/src/pymite to your hg checkout of pymite to pymite/src/platform/pyos
+
+Compile:
+export CC=i586-elf-gcc
+export AR=i586-elf-ar
+make PLATFORM=pyos
