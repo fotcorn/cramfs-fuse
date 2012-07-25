@@ -4,6 +4,7 @@
 .cproject
 .project
 obj
+build
 *~
 .autotools
 .settings

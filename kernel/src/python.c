@@ -5,8 +5,8 @@
 extern unsigned char usrlib_img[];
 
 
-void call_python() {
+void call_python(char* module) {
     uint8_t heap[HEAP_SIZE];
     pm_init(heap, HEAP_SIZE, MEMSPACE_PROG, usrlib_img);
-    pm_run((uint8_t *)"main");
+    pm_run(module);
 }

@@ -33,7 +33,7 @@ void kmain( void* mbd, unsigned int magic )
     printf("hello printf!\n");
     printf("hello int: %d\n", 25);
 
-    call_python();
+    call_python("main");
 
     while (1) {}
 }

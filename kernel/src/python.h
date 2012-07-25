@@ -1,2 +1,2 @@
 
-void call_python();
+void call_python(char* module);
