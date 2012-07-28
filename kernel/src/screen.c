@@ -50,11 +50,18 @@ void putch(char c)
         *memory = c;
         *(memory+1) = WHITE_BLACK;
         cursor_x++;
-        if (cursor_x > SCREEN_WIDTH)
+        if (cursor_x == SCREEN_WIDTH)
         {
             cursor_x = 0;
             cursor_y++;
         }
     }
+
+    if (cursor_y == SCREEN_HEIGHT) {
+    	memmove(video_memory, video_memory + (SCREEN_WIDTH * 2), (SCREEN_WIDTH * (SCREEN_HEIGHT - 1)) * 2);
+    	memset(video_memory + ((SCREEN_WIDTH * (SCREEN_HEIGHT - 1)) * 2), 0, SCREEN_WIDTH * 2);
+    	cursor_y--;
+    }
+
 }
 
